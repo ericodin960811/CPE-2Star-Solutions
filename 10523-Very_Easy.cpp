@@ -49,13 +49,10 @@ int main(){
 
     while (cin >> n >> a){
         vector <int> Ans = {0};
+        vector <int> Ai = {1};
 
         for (int i = 1; i <= n; ++i){
-            vector <int> Ai = {1};
-
-            for (int j = 1; j <= i; ++j){
-                Ai = multiply(Ai, a);
-            }
+            Ai = multiply(Ai, a);
             Ans = add(multiply(Ai, i), Ans);
         }
         
