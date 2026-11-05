@@ -1,53 +1,46 @@
 #include <iostream>
-#include <map>
 #include <vector>
 using namespace std;
 
-int color[205]; // 0 1 2
-map <int, vector<int>> Map;
-bool isBicolorable;
+bool dfs(int u, int c, vector <vector<int>>& Graph, vector<int>& Color){
+    Color[u] = c;
 
-void dfs(int u, int c){
-    color[u] = c;
-    
-    for (int v : Map[u]){
-        if (color[v] == 0){
-            dfs(v, 3 - c);
-        }else if (color[v] == c){
-            isBicolorable = false;
+    for (int v : Graph[u]){
+        if (Color[v] == 0){
+            if (!dfs(v, 3 - c, Graph, Color)){
+                return false;
+            }
+        }else{
+            if (Color[u] == Color[v]){
+                return false;
+            }
         }
     }
+
+    return true;
 }
 
 int main(){
-    int n, l;
-    int a, b;
-    
+    int n, m, node1, node2;
+
     while (cin >> n && n){
-        cin >> l;
-        
-        isBicolorable = true;
-        for (int i = 0; i < n; ++i){
-            color[i] = 0;
-            Map[i].clear();
+        cin >> m;
+
+        vector <vector<int>> Graph(n);
+        vector <int> Color(n, 0); // n 0's
+
+        while (m--){
+            cin >> node1 >> node2;
+            Graph[node1].push_back(node2);
+            Graph[node2].push_back(node1);
         }
-        
-        for (int i = 0; i < l; ++i){
-            cin >> a;
-            cin >> b;
-            
-            Map[a].push_back(b);
-            Map[b].push_back(a);
-        }
-        
-        dfs(0, 1);
-        
-        if (isBicolorable){
+
+        if(dfs(0, 1, Graph, Color)){
             cout << "BICOLORABLE." << endl;
         }else{
             cout << "NOT BICOLORABLE." << endl;
         }
     }
-    
+
     return 0;
 }
